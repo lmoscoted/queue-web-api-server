@@ -1,7 +1,7 @@
 
-## About this project
+# About this project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is an implementation of a priority queue web-api server (REST API), that can be used to add “jobs” on a queue. Each job consists of a job id, submitter’s id, processor’s id (if its being processed) and a command to execute.
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
@@ -11,51 +11,66 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Robust background job processing](https://laravel.com/docs/queues).
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Installation
+# Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Clone the repository
+-  go to laradock folder
+-  run docker-composer up -d nginx redis 
+- wait for docker building process
+- run docker-composer exec workspace bash
+- run composer install 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) 
 
-#### Testing
 
-## API Documentacion
+### Testing
+For testing, go to laradock folder, then run docker-composer exec workspace. Finally run php artisan test
+#### Load Testing
+For load testing it will be used the data which located in data folder. So those commands must be ran on that folder.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Test for Add Job n = 4.000 c = 1.000
+- ab -n 4000 -c 1000 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+Test for get Job status
+- ab -n 4000 -c 1000 -k -s 60 http://127.0.0.1/api/job/2000/
 
+For test priority queue, first add 50 jobs on low queue, then 50 on default and finally 50 on high.
+- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataLow.json  http://127.0.0.1/api/job/
+- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/
+- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataHigh.json  http://127.0.0.1/api/job/
+
+# API Documentacion
+This project consists of 3 endpoints.
+- **Base URL** : http://127.0.0.1/api
+## **Enpoints**
+--------------------------------
+### GET /job/{id}
+_Get the status of the specified job by id. It can be either pending or complete._ 
+
+**Example**  
+http://127.0.0.1/api/job/20
+
+----------------------------------------
+### POST /job
+_Add a job to the specified queue (priority)._ 
+
+**Example**  
+http://127.0.0.1/api/job
+
+--------------------------------------
+### GET /job/average/runtime
+_Get the average runtime of the all jobs processed in the last five minutes._ 
+
+**Example**  
+http://127.0.0.1/api/job/average/runtime
+
+Moreover, for more detailed information about the jobs processing, a visual dashboard is provided. It is powered by [Laravel Horizon](https://laravel.com/docs/7.x/horizon).
+It can be accessed at:
+
+http://127.0.0.1/horizon/dashboard
+
+----------------------------------------
 
 ## License
 
