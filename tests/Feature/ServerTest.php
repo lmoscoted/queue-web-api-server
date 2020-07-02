@@ -55,5 +55,17 @@ class ServerTest extends TestCase
                     'Job status' => 'pending',
                     ]);
     }
+    // Test get average runtime
+    public function testGetAverageRuntime()
+    {
+
+        $response = $this->get('/api/job/average/runtime');
+        $response->assertStatus(200)
+                 ->assertJsonStructure([
+                     'throughput',
+                     'runtime',
+                     'time'
+                 ]);
+    }
 
 }
