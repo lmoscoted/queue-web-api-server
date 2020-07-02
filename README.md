@@ -7,37 +7,46 @@ It was built with [PHP 7.3](https://www.php.ne), [Laravel 7.1](https://laravel.c
 
 To simulate the execution of a job, a delay  in seconds was implemented with random values (1 to 30).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-
 # Installation
 
-- Clone the repository
-- Go to the project folder
-- cp .env.example .env
--  go to laradock folder
-- cp .env-example .env
--  run docker-composer -f gmr-docker-compose.yml up -d nginx redis 
-- wait for docker building process
-- run docker-composer exec workspace bash
-- run composer install 
-- php artisan key:generate
+1. Clone the repository.  `git clone https://github.com/lmoscoted/queue-web-api-server.git`
+2. Go to the project folder `cd queue-web-api-server/`
+3. Create the laravel project environment file. `cp .env.example .env`
+4.  go to laradock folder `cd laradock/`
+5. Create the laradock environment file `cp .env-example .env`
+6. Build the containers.  `docker-compose -f gmr-docker-compose.yml up -d nginx redis` 
+7. Wait for docker building process finishes.
+8. Go to the workspace container. run `docker-compose exec workspace bash`
+9. Install the Laravel project. run `composer install` 
+10. Generate the application key. `php artisan key:generate`
+11. Start the jobs process manager. `php artisan horizon` 
 
 
 ## Testing
-For testing, go to laradock folder, then run docker-composer exec workspace. Finally run php artisan test
+For testing, go to laradock folder, then run docker-composer exec workspace. Finally run php artisan test.
+```
+docker-compose exec workspace bash
+php artisan test
+```
 ### Load Testing
-For load testing it will be used the data which located in data folder. So those commands must be ran on that folder. We can use [Apache Benchmark](https://httpd.apache.org/docs/2.4/programs/ab.html)
+For load testing it will be used the data which located in the **data folder**. So those commands must be ran on that folder. We can use [Apache Benchmark](https://httpd.apache.org/docs/2.4/programs/ab.html)
 
-Test for Add Job n = 4.000 c = 1.000
-- ab -n 4000 -c 1000 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/
+Test with 1.000 concurrent requests until reach 4.000.
 
-Test for get Job status
-- ab -n 4000 -c 1000 -k -s 60 http://127.0.0.1/api/job/2000/
+- `ab -n 4000 -c 1000 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/`
 
-For test priority queue, first add 50 jobs on low queue, then 50 on default and finally 50 on high.
-- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataLow.json  http://127.0.0.1/api/job/
-- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/
-- ab -n 100 -c 50 -k  -s 60 -T application/json -p dataHigh.json  http://127.0.0.1/api/job/
+Test for get job status
+- `ab -n 4000 -c 1000 -k -s 60 http://127.0.0.1/api/job/2000/`
+
+For test priority queue, first add 50 jobs on low queue, then 50 on default and finally 50 on the high one.
+- `ab -n 100 -c 50 -k  -s 60 -T application/json -p dataLow.json  http://127.0.0.1/api/job/`
+- `ab -n 100 -c 50 -k  -s 60 -T application/json -p dataDefault.json  http://127.0.0.1/api/job/`
+- `ab -n 100 -c 50 -k  -s 60 -T application/json -p dataHigh.json  http://127.0.0.1/api/job/`
+
+For more detailed information about the jobs processing, a visual dashboard is provided. It is powered by [Laravel Horizon](https://laravel.com/docs/7.x/horizon) which
+can be accessed at:
+
+http://127.0.0.1/horizon/dashboard
 
 # API Documentacion
 This project consists of 3 endpoints.
@@ -74,10 +83,7 @@ _Get the average runtime of the all processed  jobs in the last five minutes._
 **Example**  
 http://127.0.0.1/api/job/average/runtime
 
-Moreover, for more detailed information about the jobs processing, a visual dashboard is provided. It is powered by [Laravel Horizon](https://laravel.com/docs/7.x/horizon).
-It can be accessed at:
 
-http://127.0.0.1/horizon/dashboard
 
 ----------------------------------------
 
