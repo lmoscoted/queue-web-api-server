@@ -12,11 +12,14 @@ To simulate the execution of a job, a delay  in seconds was implemented with ran
 # Installation
 
 - Clone the repository
+- cp .env.example .env
 -  go to laradock folder
--  run docker-composer up -d nginx redis 
+- cp .env.example .env
+-  run docker-composer -f gmr-docker-compose.yml up -d nginx redis 
 - wait for docker building process
 - run docker-composer exec workspace bash
 - run composer install 
+- php artisan key:generate
 
 
 ## Testing
