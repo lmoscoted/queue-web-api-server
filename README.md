@@ -12,9 +12,10 @@ To simulate the execution of a job, a delay  in seconds was implemented with ran
 # Installation
 
 - Clone the repository
+- Go to the project folder
 - cp .env.example .env
 -  go to laradock folder
-- cp .env.example .env
+- cp .env-example .env
 -  run docker-composer -f gmr-docker-compose.yml up -d nginx redis 
 - wait for docker building process
 - run docker-composer exec workspace bash
