@@ -7,6 +7,8 @@ It was built with [PHP 7.3](https://www.php.ne), [Laravel 7.1](https://laravel.c
 
 To simulate the execution of a job, a delay  in seconds was implemented with random values (1 to 30).
 
+I set up 10 job processors with  Laravel Horizon as job manager.  One job processor may only process one job at a time and No two job processors should pick the same job.
+
 # Installation
 
 1. Clone the repository.  `git clone https://github.com/lmoscoted/queue-web-api-server.git`
@@ -19,7 +21,8 @@ To simulate the execution of a job, a delay  in seconds was implemented with ran
 8. Go to the workspace container. run `docker-compose exec workspace bash`
 9. Install the Laravel project. run `composer install` 
 10. Generate the application key. `php artisan key:generate`
-11. Start the jobs process manager. `php artisan horizon` 
+11. Change the permision for the laravel log file `chown `
+12. Start the jobs process manager. `php artisan horizon` 
 
 
 ## Testing

@@ -63,8 +63,17 @@ class JobController extends BaseController
         // key for redis
         $keyJob = 'laravel_horizon:snapshot:job:'.'App\Jobs\ExecuteCommand';
         $res = Redis::command('zrange',[$keyJob,'-1','-1']);
-        $metrics = json_decode($res[0]);
-        return response()->json($metrics);
+        if($res) {
+            $metrics = json_decode($res[0]);
+            return response()->json($metrics);
+            }
+        else{
+            return response()->json([
+                    'throughput' => false,
+                    'runtime'    => false,
+                    'time'       => false
+            ]);
+        }
     }
 
 }
