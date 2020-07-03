@@ -21,9 +21,10 @@ I set up 10 job processors with  Laravel Horizon as job manager.  One job proces
 8. Go to the workspace container. run `docker-compose exec workspace bash`
 9. Install the Laravel project. run `composer install` 
 10. Generate the application key. `php artisan key:generate`
-11. Change the permision for the laravel log file `chown `
-12. Start the jobs process manager. `php artisan horizon` 
+11. Start the jobs process manager. `php artisan horizon` 
 
+**Note**: If the file laravel.log has permission issues, 
+change the permision by running `chown laradock:laradock storage/logs/laravel.log`
 
 ## Testing
 For testing, go to laradock folder, then run docker-composer exec workspace. Finally run php artisan test.
